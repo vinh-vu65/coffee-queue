@@ -4,13 +4,20 @@ import viteLogo from '/vite.svg'
 import './App.css'
 import Drink from './Drink'
 import DrinkOrder from './Types'
+import { io } from 'socket.io-client'
 
 function App() {
   const [count, setCount] = useState(0)
-  
+  const socket = io('http://localhost:8999')
 
   let newDrinkArray: Array<DrinkOrder> = [] 
   const [drinks, setDrinks] = useState(newDrinkArray)
+
+  socket.on('sendDrinks', drinkQueue => {
+    let serverDrinks: Array<DrinkOrder> = [...drinkQueue]
+    setDrinks(serverDrinks)
+  })
+
 
   return (
     <>
@@ -24,7 +31,6 @@ function App() {
       </div>
       <h1>Vite + React</h1>
       <div className="card">
-        
         <p>
           Edit <code>src/App.tsx</code> and save to test HMR
         </p>
@@ -32,21 +38,20 @@ function App() {
       <button onClick={() => {
         setCount((count) => count + 1)
         let drink: DrinkOrder = {Name: `Vinh${count}`, Drink: "Coffee"}
-        setDrinks(drinks => [...drinks, drink])
-        }
-      }>
-          Add 
-      </button>
+        setDrinks(drinks => [...drinks, drink])}
+        }>Add</button>
+        
       {drinks.map(drink => {
         return (
-          <p>
+          <div>
             <Drink {...drink} />
             <button onClick={() => {
               let newDrinks = [...drinks]
               newDrinks.splice(newDrinks.indexOf(drink), 1)
+              socket.emit('removeDrink', newDrinks)
               setDrinks(newDrinks)
-            } }>Remove</button>
-          </p>
+            }}>Remove</button>
+          </div>
         )
       })}
     </>

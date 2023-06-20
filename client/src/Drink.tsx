@@ -5,7 +5,7 @@ export default function Drink(props: DrinkOrder) {
     let drink = props.Drink
     return (
         <div>
-            <p>Name: {name} ... Drink: {drink}</p>
+            Name: {name} ... Drink: {drink}
         </div>
     )
 }
