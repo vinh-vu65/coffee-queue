@@ -52,7 +52,9 @@ app.post('/hook', (req, res) => {
     res.status(200).send(`Order received: ${JSON.stringify(req.body)}`)
 });
 
-io.on('connection', socket => {
+io.on('connect', socket => {
+    socket.emit("sendDrinks", drinksQueue)
+
     socket.on('removeDrink', updatedDrinkQueue => {
         drinksQueue = [...updatedDrinkQueue]
     })
