@@ -3,12 +3,15 @@ import DrinkOrder from './Types'
 interface TableProps {
     data: DrinkOrder[];
     onRemove: (index: number) => void;
+    selectedLocation: string;
   }
   
-  const Table: React.FC<TableProps> = ({ data, onRemove }) => {
+  const Table: React.FC<TableProps> = ({ data, onRemove, selectedLocation }) => {
     const handleRemove = (index: number) => {
         onRemove(index);
       };
+
+    const filteredDrinks = data.filter((row) => row.Location === selectedLocation)
 
     return (
       <table>
@@ -16,10 +19,11 @@ interface TableProps {
           <tr>
             <th>Name</th>
             <th>Drink</th>
+            <th>Remove</th>
           </tr>
         </thead>
         <tbody>
-          {data.map((row, index) => (
+          {filteredDrinks.map((row, index) => (
             <tr key={index}>
               <td>{row.Name}</td>
               <td>{row.Drink}</td>

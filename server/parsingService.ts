@@ -13,23 +13,26 @@ export class RGPTransaction {
     }
 
     toDrinkOrder(): DrinkOrder {
-        return new DrinkOrder(this.getName(), this.getDrink());
+        return new DrinkOrder(this.getName(), this.getDrink(), this.getLocation());
     }
 }
 
 export class DrinkOrder {
     Name: string;
     Drink: string;
+    Location: string;
 
-    constructor(name: string, drink: string) {
+    constructor(name: string, drink: string, location: string) {
         this.Name = name;
-        this.Drink = drink
+        this.Drink = drink;
+        this.Location = location;
     }
     getName(): string {return this.Name}
     getDrink(): string {return this.Drink}
+    getLocation(): string {return this.Location}
 
     toString(): string {
-        return `[${this.Name}, ${this.Drink}]`
+        return `[${this.Name}, ${this.Drink}, ${this.Location}]`
     }
 }
 

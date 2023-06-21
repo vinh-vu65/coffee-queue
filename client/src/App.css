@@ -40,3 +40,21 @@
 .read-the-docs {
   color: #888;
 }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 8px;
+  text-align: center;
+}
+
+td {
+  border-bottom: 1px solid #ddd;
+}
+
+td:nth-child(2), th:nth-child(2) {
+  width: 50%;
+}
