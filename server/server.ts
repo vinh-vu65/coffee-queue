@@ -45,7 +45,7 @@ app.post('/hook', (req, res) => {
         drinksQueue.push(drinkOrder)
     }
     
-    console.log(`Current Queue: ${drinksQueue.map(drink => drink.toString())}`)
+    console.log(`Current Queue from post: ${drinksQueue.map(drink => drink.toString())}`)
     
     io.emit("sendDrinks", drinksQueue)
     
@@ -56,7 +56,8 @@ io.on('connect', socket => {
     socket.emit("sendDrinks", drinksQueue)
 
     socket.on('removeDrink', updatedDrinkQueue => {
-        drinksQueue = [...updatedDrinkQueue]
+        drinksQueue = [...updatedDrinkQueue] as Array<DrinkOrder>
+        console.log(`Current Queue from socket: ${drinksQueue.map(drink => drink.toString())}`)
     })
 })
 

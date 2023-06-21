@@ -1,22 +1,31 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
 import Drink from './Drink'
 import DrinkOrder from './Types'
-import { io } from 'socket.io-client'
+import { socket } from './socket'
 
 function App() {
-  const [count, setCount] = useState(0)
-  const socket = io('http://localhost:8999')
-
+  
   let newDrinkArray: Array<DrinkOrder> = [] 
   const [drinks, setDrinks] = useState(newDrinkArray)
+  
+  socket.connect()
+  useEffect(() => {
+    function serverSendDrinks(value: Array<DrinkOrder>) {
+      setDrinks([...value])
+    }
+    
+    socket.on('sendDrinks', serverSendDrinks)
+    socket.emit('removeDrink', drinks)
 
-  socket.on('sendDrinks', drinkQueue => {
-    let serverDrinks: Array<DrinkOrder> = [...drinkQueue]
-    setDrinks(serverDrinks)
-  })
+    return () => {
+      socket.off('sendDrinks', serverSendDrinks)
+    }
+  }, [drinks])
+
+  
 
 
   return (
@@ -35,11 +44,6 @@ function App() {
           Edit <code>src/App.tsx</code> and save to test HMR
         </p>
       </div>
-      <button onClick={() => {
-        setCount((count) => count + 1)
-        let drink: DrinkOrder = {Name: `Vinh${count}`, Drink: "Coffee"}
-        setDrinks(drinks => [...drinks, drink])}
-        }>Add</button>
         
       {drinks.map(drink => {
         return (
@@ -48,7 +52,6 @@ function App() {
             <button onClick={() => {
               let newDrinks = [...drinks]
               newDrinks.splice(newDrinks.indexOf(drink), 1)
-              socket.emit('removeDrink', newDrinks)
               setDrinks(newDrinks)
             }}>Remove</button>
           </div>
