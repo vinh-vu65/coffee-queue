@@ -2,16 +2,16 @@ import { useEffect, useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
-import Drink from './Drink'
 import DrinkOrder from './Types'
 import { socket } from './socket'
+import Table from './Table'
 
 function App() {
   
   let newDrinkArray: Array<DrinkOrder> = [] 
   const [drinks, setDrinks] = useState(newDrinkArray)
-  
   socket.connect()
+
   useEffect(() => {
     function serverSendDrinks(value: Array<DrinkOrder>) {
       setDrinks([...value])
@@ -25,8 +25,11 @@ function App() {
     }
   }, [drinks])
 
-  
-
+  const handleRemove = (index: number) => {
+    const updatedData = [...drinks];
+    updatedData.splice(index, 1);
+    setDrinks(updatedData);
+  }
 
   return (
     <>
@@ -45,18 +48,9 @@ function App() {
         </p>
       </div>
         
-      {drinks.map(drink => {
-        return (
-          <div>
-            <Drink {...drink} />
-            <button onClick={() => {
-              let newDrinks = [...drinks]
-              newDrinks.splice(newDrinks.indexOf(drink), 1)
-              setDrinks(newDrinks)
-            }}>Remove</button>
-          </div>
-        )
-      })}
+      <div>
+        <Table data={drinks} onRemove={handleRemove} />
+      </div>
     </>
   )
 }
