@@ -11,7 +11,9 @@ interface TableProps {
         onRemove(index);
       };
 
-    const filteredDrinks = data.filter((row) => row.Location === selectedLocation)
+    const filteredDrinks = data
+        .map((item, index) => ({ item, index }))
+        .filter(({ item }) => item.Location === selectedLocation)
 
     return (
       <table>
@@ -23,10 +25,10 @@ interface TableProps {
           </tr>
         </thead>
         <tbody>
-          {filteredDrinks.map((row, index) => (
+          {filteredDrinks.map(({ item, index }) => (
             <tr key={index}>
-              <td>{row.Name}</td>
-              <td>{row.Drink}</td>
+              <td>{item.Name}</td>
+              <td>{item.Drink}</td>
               <td><button onClick={() => handleRemove(index)}>Remove</button></td>
             </tr>
           ))}
